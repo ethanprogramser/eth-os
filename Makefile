@@ -1,13 +1,51 @@
-all:
-	## bootloader ###
-	nasm -f elf32 src/boot.s -o build/boot.o
-	nasm -f elf32 src/gdt.s -o build/gdts.o
-	### Kernel #####
-	gcc -m32 -fno-stack-protector -fno-builtin -c src/kernel.c -o build/kernel.o
-	gcc -m32 -fno-stack-protector -fno-builtin -c src/vga.c -o build/vga.o
-	gcc -m32 -fno-stack-protector -fno-builtin -c src/gdt.c -o build/gdt.o
-	### else #####
-	ld -m elf_i386 -T linker.ld -o kernel build/boot.o build/kernel.o build/vga.o build/gdt.o build/gdts.o
-	mv kernel ethos/boot/kernel
-	grub-mkrescue -o build/ethos.iso ethos/
-	qemu-system-i386 build/ethos.iso
+ISO_NAME=ethos.iso
+
+include config.mk
+
+.PHONY: all bootloader kernel link grub iso run clean
+
+all: dirs bootloader kernel link grub iso
+
+# Create build directory
+dirs:
+	mkdir -p $(BUILD_DIR)/
+	mkdir -p $(OBJ_DIR)/
+	mkdir -p $(OUT_DIR)/
+
+# Bootloader
+bootloader:
+	@echo "Compiling bootloader..."
+	$(MAKE) -C $(SRC_DIR)/bootloader
+
+# Kernel
+kernel:
+	@echo "Compiling kernel..."
+	$(MAKE) -C $(SRC_DIR)/kernel
+
+# Link everything
+link: bootloader kernel
+	@echo "Linking..."
+	$(LD) $(LDFLAGS) -T $(abspath linker.ld) -o $(BUILD_DIR)/kernel $(wildcard $(OBJ_DIR)/*.o)
+
+# Place GRUB config
+grub: link
+	@echo "Placing GRUB config..."
+	$(MAKE) -C $(SRC_DIR)/grub
+
+# Make an `.iso` file
+iso: link grub
+	@echo "Making an iso..."
+	mkdir -p $(OUT_DIR)/ethos/boot/kernel
+	cp $(BUILD_DIR)/kernel $(OUT_DIR)/ethos/boot/kernel/kernel
+	mkdir -p $(OUT_DIR)/iso
+	grub-mkrescue -o $(OUT_DIR)/iso/$(ISO_NAME) $(OUT_DIR)/ethos/
+
+# Run qemu
+run: all
+	qemu-system-i386 $(OUT_DIR)/iso/$(ISO_NAME)
+
+# Clean
+clean:
+	rm -rf $(BUILD_DIR)/*
+	rm -rf $(OBJ_DIR)/*
+	rm -rf $(OUT_DIR)/*
