@@ -1,22 +1,22 @@
-Whats up guys welcome to my OS project series from youtube
+𝙒𝙝𝙖𝙩𝙨 𝙪𝙥 𝙜𝙪𝙮𝙨 𝙬𝙚𝙡𝙘𝙤𝙢𝙚 𝙩𝙤 𝙢𝙮 𝙊𝙎 𝙥𝙧𝙤𝙟𝙚𝙘𝙩 𝙨𝙚𝙧𝙞𝙚𝙨 𝙛𝙧𝙤𝙢 𝙮𝙤𝙪𝙩𝙪𝙗𝙚
 
-check out the series on my yt: https://www.youtube.com/@eprograms
+𝙘𝙝𝙚𝙘𝙠 𝙤𝙪𝙩 𝙩𝙝𝙚 𝙨𝙚𝙧𝙞𝙚𝙨 𝙤𝙣 𝙢𝙮 𝙮𝙩: 𝙝𝙩𝙩𝙥𝙨://𝙬𝙬𝙬.𝙮𝙤𝙪𝙩𝙪𝙗𝙚.𝙘𝙤𝙢/@𝙚𝙥𝙧𝙤𝙜𝙧𝙖𝙢𝙨
 
 ![2024-10-17-173456_723x408_scrot](https://github.com/user-attachments/assets/01662f1e-1d9c-4500-a71b-5f7786cfcb50)
 
-Done:
-  Boot_into_grub[D]
-  VGA_driver[D]
-  GDT[D]
-  enabled_interrupts[D]
-  timer[D]
-  keyboard_input[D]
+Done
+  - Boot_into_grub ✔️
+  - VGA_driver ✔️
+  - GDT ✔️
+  - enabled_interrupts ✔️
+  - timer ✔️
+  - keyboard_input ✔️
 
-Needed:
-  terminal_with_commands[sw]
-  filesystem[sw]
-  Malloc[sw]
-  gui_library[sw]
-  window_manager[sw]
-  code_editor[sw]
+Needed
+  - terminal_with_commands 
+  - filesystem 
+  - Malloc 
+  - gui_library 
+  - window_manager 
+  - code_editor 
   
