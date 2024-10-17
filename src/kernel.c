@@ -1,6 +1,15 @@
 #include "vga.h"
+#include "stdint.h"
+#include "gdt.h"
+#include "idt.h"
+#include "timer.h"
+#include "util.h"
+#include "stdlib/stdio.h"
+#include "keyboard.h"
 
-void main(void);
+
+void main();
+
 void set_screen_color(uint8_t color);
 
 void set_screen_color(uint8_t color) {
@@ -11,9 +20,16 @@ void set_screen_color(uint8_t color) {
     }
 }
 
-void main(void) {
-  print("hello");
-  set_screen_color(0x1F);
-  //print("#######welcome to ethos######\n");
-  //print("login:");
+
+void main(){
+    initGdt();
+    initIdt();
+    initTimer();
+    initKeyboard();
+    print("######################\n");
+    print("#        ETHOS       #\n");
+    print("######################\n");
+    print("ethos-->");
+    set_screen_color(0x1F);
+    for(;;);
 }

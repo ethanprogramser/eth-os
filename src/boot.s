@@ -1,30 +1,24 @@
-bits 32
-
+BITS 32
 
 section .text
-    align 4
-    dd 0x1BADB002
-    dd 0x00000000
-    dd -(0x1BADB002 + 0x00000000)
+    ALIGN 4
+    DD 0x1BADB002
+    DD 0x00000000
+    DD -(0x1BADB002 + 0x00000000)
 
 global start
-extern main 
-
+extern main
 
 start:
-  cli
-  mov esp, stack_space
-  call main
-  hlt
-
+    CLI
+    MOV esp, stack_space
+    CALL main
+    HLT
 HaltKernel:
-  cli
-  hlt
-  jmp HaltKernel
+    CLI
+    HLT
+    JMP HaltKernel
 
 section .bss
-
-resb 8192
-
+RESB 8192
 stack_space:
-

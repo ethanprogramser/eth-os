@@ -1,25 +1,21 @@
-bits 64
-
-section .text
 global gdt_flush
 
 gdt_flush:
-  lgdt [rdi]
-	mov ax, 0x10
-	mov ds, ax
-	mov es, ax
-	mov fs, ax
-	mov gs, ax
-	mov ss, ax
-	pop rdi
-	mov rax, 0x08
-	push rax
-	push rdi
-	retfq
+    MOV eax, [esp+4]
+    LGDT [eax]
+
+    MOV eax, 0x10
+    MOV ds, ax
+    MOV es, ax
+    MOV fs, ax
+    MOV gs, ax
+    MOV ss, ax
+    JMP 0x08:.flush
+.flush:
+    RET
 
 global tss_flush
-
 tss_flush:
-  mov ax, 0x20
-  ltr ax
-  ret
+    MOV ax, 0x2B
+    LTR ax
+    RET
