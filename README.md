@@ -18,5 +18,18 @@ Needed
   - Malloc 
   - gui_library 
   - window_manager 
-  - code_editor 
+  - code_editor
+
+## Compile and Run
+``` sh
+# To compile OS and build .iso file and run
+make
+
+### Dependencies 
+* NASM
+* C Compiler
+* grub
+* xorriso
+* GNU Make
+* qemu
   
