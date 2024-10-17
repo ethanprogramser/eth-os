@@ -20,11 +20,6 @@ Needed
   - window_manager 
   - code_editor
 
-## Compile and Run
-``` sh
-# To compile OS and build .iso file and run
-make
-
 ### Dependencies 
 * NASM
 * C Compiler
@@ -33,3 +28,10 @@ make
 * GNU Make
 * qemu
   
+
+## Compile and Run
+``` sh
+# To compile OS and build .iso file and run
+make
+
+``` 
