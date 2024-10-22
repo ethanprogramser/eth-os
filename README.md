@@ -11,11 +11,12 @@ Done
   - enabled_interrupts ✔️
   - timer ✔️
   - keyboard_input ✔️
+  - malloc ✔️
 
 Needed
   - terminal_with_commands 
   - filesystem 
-  - Malloc 
+  - Paging
   - gui_library 
   - window_manager 
   - code_editor
