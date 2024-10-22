@@ -4,6 +4,7 @@
 #include "stdlib/stdio.h"
 #include "keyboard.h"
 #include "vga.h"
+#include "strings.h"
 
 bool capsOn;
 bool capsLock;
@@ -91,6 +92,7 @@ void rm() {
     text[--i] = text[i];
 }
 
+
 void clear() {
   uint8_t p = 0;
   while(text[p] != '\0') {
@@ -106,19 +108,6 @@ void delp(char p, char *t) {
     }
 }
 
-void parser(uint8_t code) {
-    char buff[100];
-    uint8_t i = 0;
-    while(text[i] != lowercase[code]) {
-        i++;
-    }
-    for(uint8_t p = 0;p > i;p++) {
-        buff[p] = text[p];
-    }
-    print(buff);
-}
-
-
 void keyboardHandler(struct InterruptRegisters *regs){
     char scanCode = inPortB(0x60) & 0x7F; //What key is pressed
     char press = inPortB(0x60) & 0x80; //Press down, or released
@@ -128,8 +117,6 @@ void keyboardHandler(struct InterruptRegisters *regs){
         case 29:
         case 16:
           delp(press, "q");
-          print("\n");
-          print(text);
           break;
         case 17:
           delp(press, "w");
@@ -186,7 +173,7 @@ void keyboardHandler(struct InterruptRegisters *regs){
           delp(press, "l");
           break;
         case 45:
-          delp(press, "z");
+          delp(press, "x");
           break;
         case 46:
           delp(press, "c");
@@ -206,6 +193,30 @@ void keyboardHandler(struct InterruptRegisters *regs){
         case 57:
           delp(press, " "); 
           break;
+        case 28:
+          if(press == 0) {
+              if(comp("clear", text) != 0) {
+                 Reset();
+              }
+              else if(comp("exit", text) != 0) {
+                 print("\t exit");
+              }
+              else if(comp("info", text) != 0) {
+                 print("\tbasic commands exit, clear, info");
+              }
+              else{
+                 print("\tcommand not found");
+              }
+              print("\nethos-->");
+              clear();
+          }
+          break;
+        //case 15:
+          //print("hello world");
+          //if(press == 0) {
+            //  rm();
+         // }
+          //break;
         case 56:
         case 59:
         case 60:
@@ -237,25 +248,17 @@ void keyboardHandler(struct InterruptRegisters *regs){
             break;
         default:
             if (press == 0){
-                if(lowercase[scanCode] == '\b') {
-                    rm();
-                }
-                if(lowercase[scanCode] == '\n') {
-                    //print("\nethos-->");
-                    print("\n");
-                    print(text);
-                    print("\nethos-->");
-                    //parser(57);
-                    clear();
-                }
-                else {
+                  if(lowercase[scanCode] == '\b') {
+                      rm();
+                      print("\b");
+                      break;
+                  }
                   if (capsOn || capsLock){
                     printf("%c", uppercase[scanCode]);
                   }
                   else{
                     printf("%c", lowercase[scanCode]);
                   } 
-                }
             }
 
             

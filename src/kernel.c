@@ -6,7 +6,7 @@
 #include "util.h"
 #include "stdlib/stdio.h"
 #include "keyboard.h"
-
+#include "malloc.h"
 
 void main();
 
@@ -31,5 +31,7 @@ void main(){
     print("######################\n");
     print("ethos-->");
     set_screen_color(0x1F);
+    uint32_t mem;
+    uint32_t page = ethoc(1000, 1, &mem);
     for(;;);
 }

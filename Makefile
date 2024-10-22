@@ -12,8 +12,9 @@ all:
 	gcc -m32 -fno-stack-protector -fno-builtin -c src/util.c -o build/util.o
 	gcc -m32 -fno-stack-protector -fno-builtin -c src/idt.c -o build/idts.o
 	gcc -m32 -fno-stack-protector -fno-builtin -c src/keyboard.c -o build/keyboard.o
+	gcc -m32 -fno-stack-protector -fno-builtin -c src/malloc.c -o build/malloc.o
 	### else #####
-	ld -m elf_i386 -T linker.ld -o kernel build/boot.o build/kernel.o build/vga.o build/gdts.o build/gdt.o build/idts.o build/idt.o  build/util.o build/timer.o build/stdio.o build/keyboard.o
-	mv kernel ethos/boot/kernel
-	grub-mkrescue -o build/ethos.iso ethos/
+	ld -m elf_i386 -T linker.ld -o kernel build/boot.o build/kernel.o build/vga.o build/gdts.o build/gdt.o build/idts.o build/idt.o  build/util.o build/timer.o build/stdio.o build/keyboard.o build/malloc.o
+	mv kernel src/ethos/boot/kernel
+	grub-mkrescue -o build/ethos.iso src/ethos/
 	qemu-system-i386 build/ethos.iso
