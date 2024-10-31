@@ -14,11 +14,11 @@ Done
   - timer ✔️
   - keyboard_input ✔️
   - malloc ✔️
+  - paging ✔️
 
 Needed
   - terminal_with_commands 
   - filesystem 
-  - Paging
   - gui_library 
   - window_manager 
   - code_editor
