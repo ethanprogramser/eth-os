@@ -29,7 +29,7 @@ uint32_t* memGetCurrentPageDir(){
     uint32_t pd;
     asm volatile("mov %%cr3, %0": "=r"(pd));
     pd += KERNEL_START;
-    //gets the starting mem address from cr3
+    //gets the current mem address from cr3
 
     return (uint32_t*) pd;
 }
