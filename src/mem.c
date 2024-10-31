@@ -2,24 +2,26 @@
 #include "mem.h"
 #include "stdint.h"
 
-static uint32_t pageFrameMin;
-static uint32_t pageFrameMax;
-static uint32_t totalAlloc;
-int mem_num_vpages;
+static uint32_t pageFrameMin; // minimum physical frame
+static uint32_t pageFrameMax; // maximum physical frame
+static uint32_t totalAlloc; // total amount of allocated frames
+int mem_num_vpages; //amount of virtual pages
 
-#define NUM_PAGES_DIRS 256
-#define NUM_PAGE_FRAMES (0x100000000 / 0x1000 / 8)
+#define NUM_PAGES_DIRS 256 // number of page directories 
+#define NUM_PAGE_FRAMES (0x100000000 / 0x1000 / 8) // number of page frames
 
 uint8_t physicalMemoryBitmap[NUM_PAGE_FRAMES / 8]; //Dynamically, bit array
 
-static uint32_t pageDirs[NUM_PAGES_DIRS][1024] __attribute__((aligned(4096)));
-static uint8_t pageDirUsed[NUM_PAGES_DIRS];
+static uint32_t pageDirs[NUM_PAGES_DIRS][1024] __attribute__((aligned(4096)));//# of pagedir
+static uint8_t pageDirUsed[NUM_PAGES_DIRS]; // total amount of pagedirused
 
 void pmm_init(uint32_t memLow, uint32_t memHigh){
+    //Calculates pageframemin and pageframeMax based on memlow and memhigh
     pageFrameMin = CEIL_DIV(memLow, 0x1000);
     pageFrameMax = memHigh / 0x1000;
     totalAlloc = 0;
-
+    
+    //clears the bitmap
     memset(physicalMemoryBitmap, 0, sizeof(physicalMemoryBitmap));
 }
 
@@ -27,16 +29,20 @@ uint32_t* memGetCurrentPageDir(){
     uint32_t pd;
     asm volatile("mov %%cr3, %0": "=r"(pd));
     pd += KERNEL_START;
+    //gets the starting mem address from cr3
 
     return (uint32_t*) pd;
 }
 
 void memChangePageDir(uint32_t* pd){
+    // Adjusts pd by subtracting KERNEL_START
+    // then puts it in the cr3 register
     pd = (uint32_t*) (((uint32_t)pd)-KERNEL_START);
     asm volatile("mov %0, %%eax \n mov %%eax, %%cr3 \n" :: "m"(pd));
 }
 
 void syncPageDirs(){
+    //iterates over the pages and clears certain flags in each page directory if used
     for (int i = 0; i < NUM_PAGES_DIRS; i++){
         if (pageDirUsed[i]){
             uint32_t* pageDir = pageDirs[i];
@@ -49,6 +55,7 @@ void syncPageDirs(){
 }
 
 void memMapPage(uint32_t virutalAddr, uint32_t physAddr, uint32_t flags){
+    //Maps a virtual address to a physical address with specific flags
     uint32_t *prevPageDir = 0;
 
     if (virutalAddr >= KERNEL_START){
@@ -89,6 +96,7 @@ void memMapPage(uint32_t virutalAddr, uint32_t physAddr, uint32_t flags){
 }
 
 uint32_t pmmAllocPageFrame(){
+    // allocates the free bit in the bitmap and allocates the page frame
     uint32_t start = pageFrameMin / 8 + ((pageFrameMin & 7) != 0 ? 1 : 0);
     uint32_t end = pageFrameMax / 8 - ((pageFrameMax & 7) != 0 ? 1 : 0);
 
@@ -118,6 +126,7 @@ uint32_t pmmAllocPageFrame(){
 
 
 void initMemory(uint32_t memHigh, uint32_t physicalAllocStart){
+    // sets up memory by initializing the page directories and invalidating entries in the TLB
     mem_num_vpages = 0;
     initial_page_dir[0] = 0;
     invalidate(0);
@@ -129,7 +138,8 @@ void initMemory(uint32_t memHigh, uint32_t physicalAllocStart){
     memset(pageDirUsed, 0, NUM_PAGES_DIRS);
 }
 
+
+// checks invlpg to make sure the page_tables are insync with memory
 void invalidate(uint32_t vaddr){
     asm volatile("invlpg %0" :: "m"(vaddr));
 }
-
