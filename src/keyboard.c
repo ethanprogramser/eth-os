@@ -4,7 +4,9 @@
 #include "stdlib/stdio.h"
 #include "keyboard.h"
 #include "vga.h"
+#include "vfs.h"
 #include "strings.h"
+
 
 bool capsOn;
 bool capsLock;
@@ -69,7 +71,6 @@ UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN
 };
 
 const uint32_t val[128] = {'c'};
-
 
 void append(char *part) {
   uint8_t i = 0;
@@ -203,6 +204,10 @@ void keyboardHandler(struct InterruptRegisters *regs){
               }
               else if(comp("info", text) != 0) {
                  print("\tbasic commands exit, clear, info");
+              }
+              else if(comp("ls", text) != 0) {
+                  print("\n__FILES__\n");
+                  printfs();
               }
               else{
                  print("\tcommand not found");

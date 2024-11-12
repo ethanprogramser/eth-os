@@ -8,6 +8,16 @@ static uint32_t heapSize;
 static uint32_t threshold;
 static bool kmallocInitalized = false;
 
+void *memcpy(void *dest, const void *src, unsigned int n) 
+{
+  char *d = (char *)dest;
+  const char *s = (const char *)src;
+  for(int i=0;i<n;i++) {
+      d[i] = s[i];
+  }
+  return dest;
+}
+
 void kmallocInit(uint32_t initialHeapSize){
     heapStart = KERNEL_MALLOC;
     heapSize = 0;
@@ -33,6 +43,7 @@ void changeHeapSize(int newSize){
 
     heapSize = newSize;
 }
+
 
 
 
