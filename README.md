@@ -13,9 +13,12 @@ Done
   - keyboard_input ✔️
   - malloc ✔️
   - paging ✔️
+  - vfs (virtual fs) ✔️
 
 Needed
-  - terminal_with_commands 
+  - terminal_with_commands
+  - syscalls
+  - network stuff
   - filesystem 
   - gui_library 
   - window_manager 
